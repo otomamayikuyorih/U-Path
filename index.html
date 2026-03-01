@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="U-Path：検出されない代謝物（undetected）を考慮したエンリッチメント解析ソフトウェア開発。Rパッケージmseapcaを公開。今後Python実装・GUI・MCP・サポートも予定。" />
+  <title>U-Path｜エンリッチメント解析ソフトウェア開発</title>
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --card:#101826;
+      --text:#e8eef6;
+      --muted:#9bb0c8;
+      --line:#223044;
+      --accent:#7dd3fc;
+      --accent2:#a7f3d0;
+      --code:#0e1522;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(1200px 600px at 15% 0%, rgba(125,211,252,.14), transparent 60%),
+        radial-gradient(1200px 600px at 85% 20%, rgba(167,243,208,.10), transparent 60%),
+        var(--bg);
+      color:var(--text);
+      line-height:1.65;
+    }
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrap{max-width:980px;margin:0 auto;padding:28px 18px 70px}
+    header{
+      display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;
+      padding:6px 0 16px;
+    }
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      background: linear-gradient(135deg, rgba(125,211,252,.95), rgba(167,243,208,.95));
+      box-shadow: 0 14px 40px rgba(0,0,0,.35);
+    }
+    .brand h1{margin:0;font-size:18px;letter-spacing:.2px;line-height:1.2}
+    .brand .sub{color:var(--muted);font-size:12px;margin-top:3px}
+    nav{display:flex;gap:12px;flex-wrap:wrap}
+    nav a{
+      color:var(--muted);
+      font-size:13px;
+      padding:7px 10px;border-radius:12px;
+      border:1px solid transparent;
+    }
+    nav a:hover{
+      color:var(--text);
+      border-color:var(--line);
+      background:rgba(255,255,255,.03);
+      text-decoration:none;
+    }
+
+    .hero{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px;
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      box-shadow: 0 16px 45px rgba(0,0,0,.28);
+    }
+    .kicker{
+      display:inline-flex;align-items:center;gap:8px;
+      font-size:12px;color:var(--muted);
+      padding:6px 10px;border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+    }
+    .hero h2{
+      margin:10px 0 6px;
+      font-size:34px;
+      letter-spacing:-.4px;
+      line-height:1.15;
+    }
+    .hero p{margin:0;color:var(--muted);font-size:15px}
+    .hero .lead{margin-top:10px}
+
+    .callout{
+      margin-top:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+      border-radius:16px;
+      padding:12px 14px;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .callout strong{color:var(--text)}
+    .callout a{color:var(--accent2)}
+    .grid{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+    }
+    @media (max-width: 860px){
+      .grid{grid-template-columns:1fr}
+    }
+    section.card{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      background:rgba(255,255,255,.02);
+    }
+    section.card h3{
+      margin:0 0 8px;
+      font-size:16px;
+    }
+    .muted{color:var(--muted)}
+    ul{margin:10px 0 0 18px;padding:0}
+    li{margin:7px 0;color:var(--muted);font-size:14px}
+
+    pre{
+      margin:10px 0 0;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:var(--code);
+      overflow:auto;
+    }
+    code, pre{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:13px;
+      color: #dbeafe;
+    }
+
+    .pill{
+      display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;
+    }
+    .pill span{
+      font-size:12px;color:var(--muted);
+      padding:6px 10px;border:1px solid var(--line);
+      border-radius:999px;background:rgba(255,255,255,.02);
+    }
+
+    .footer{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:12px;
+      border-top:1px solid var(--line);
+      padding-top:14px;
+      display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>U-Path</h1>
+          <div class="sub">Undetected-aware enrichment software (pathway / set analysis)</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#about">概要</a>
+        <a href="#mseapca">mseapca（R）</a>
+        <a href="#roadmap">今後の予定</a>
+        <a href="#contact">ご相談</a>
+        <a href="#links">リンク</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" id="about">
+        <div class="kicker">エンリッチメント解析ソフトウェア開発</div>
+        <h2>U-Path</h2>
+
+        <p class="lead">
+          <strong>U-Path</strong> は、検出されない代謝物（undetected / non-detectable）を前提に、
+          エンリッチメント解析（pathway / set analysis）を「再現可能に」実行できるソフトウェア群として開発しています。
+          現在はその一部として、Rパッケージ <strong>mseapca</strong> を公開しています。
+        </p>
+
+        <div class="pill" aria-label="keywords">
+          <span>Undetected-aware</span>
+          <span>Background explicit</span>
+          <span>MSEA / ORA</span>
+          <span>SSEA</span>
+          <span>GSEA-style</span>
+        </div>
+
+        <div class="callout" id="contact">
+          <strong>ご相談：</strong>
+          サポート、Python実装、GUI開発、データベース整備のご相談はこちらまで。
+          <a href="mailto:contact@example.com">contact@example.com</a>
+          <div class="muted" style="margin-top:6px">
+            ※ 連絡先は差し替えてください。簡単に「目的／データ種類／運用形態（CLI/GUI/MCP）」を書いていただけると助かります。
+          </div>
+        </div>
+      </section>
+
+      <div class="grid">
+        <section class="card" id="mseapca">
+          <h3>Rパッケージ：mseapca（U-Pathの一部）</h3>
+          <p class="muted" style="margin:0 0 8px">
+            <strong>mseapca</strong> は、メタボロミクスを主対象としたエンリッチメント解析Rパッケージです。
+            MSEA（ORA）、SSEA、GSEA-style解析に対応し、未検出を考慮した拡張も含みます。
+          </p>
+
+          <pre><code>install.packages("mseapca")</code></pre>
+
+          <p class="muted" style="margin-top:10px;font-size:13px">
+            詳細（使い方・vignette・検証）は、CRAN / GitHub / ドキュメントにまとめる想定です。
+          </p>
+        </section>
+
+        <section class="card" id="roadmap">
+          <h3>今後の予定</h3>
+          <ul>
+            <li><strong>Python実装</strong>：企業・解析基盤への組み込み（wheel / CLI / API）</li>
+            <li><strong>GUI</strong>：ローカルGUI（入力 → 実行 → レポート出力）</li>
+            <li><strong>データベース</strong>：セット定義の整備、更新・配布の仕組み</li>
+            <li><strong>MCP対応</strong>：AIエージェント連携（安全な呼び出し・ログ設計）</li>
+            <li><strong>サポート</strong>：導入・運用・解析設計の技術支援（企業・研究機関向け）</li>
+          </ul>
+          <p class="muted" style="margin-top:10px;font-size:13px">
+            ※ Python版やGUIは、公開形態や名称を含めて検討中です（mseapcaとは別名にする可能性があります）。
+          </p>
+        </section>
+
+        <section class="card" id="links" style="grid-column:1 / -1;">
+          <h3>リンク（差し替え用）</h3>
+          <ul>
+            <li>CRAN（mseapca）：<span class="muted">（URL）</span></li>
+            <li>GitHub：<span class="muted">（URL）</span></li>
+            <li>ドキュメント（pkgdown / vignette / note など）：<span class="muted">（URL）</span></li>
+            <li>関連論文・プレプリント：<span class="muted">（URL）</span></li>
+          </ul>
+        </section>
+      </div>
+
+      <div class="footer">
+        <div>© <span id="y"></span> U-Path</div>
+        <div class="muted">Last updated: <span id="d"></span></div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const now = new Date();
+    document.getElementById("y").textContent = now.getFullYear();
+    document.getElementById("d").textContent = now.toISOString().slice(0,10);
+  </script>
+</body>
+</html>
